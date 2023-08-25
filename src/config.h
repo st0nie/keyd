@@ -46,6 +46,7 @@ enum op {
 	OP_MACRO2,
 	OP_COMMAND,
 	OP_TIMEOUT,
+	OP_TIMEOUT_TAP,
 
 /* Experimental */
 	OP_SCROLL_TOGGLE,

@@ -4,6 +4,7 @@
  * © 2019 Raheman Vaiya (see also: LICENSE).
  */
 
+#include "config.h"
 #include "keyd.h"
 
 static long process_event(struct keyboard *kbd, uint8_t code, int pressed, long time);
@@ -687,6 +688,20 @@ static long process_descriptor(struct keyboard *kbd, uint8_t code,
 			kbd->pending_key.behaviour = PK_INTERRUPT_ACTION1;
 
 			schedule_timeout(kbd, kbd->pending_key.expire);
+		}
+
+		break;
+	case OP_TIMEOUT_TAP:
+		if (pressed) {
+			kbd->pending_key.action1 = kbd->config.descriptors[d->args[0].idx];
+			kbd->pending_key.action2 = kbd->config.descriptors[d->args[2].idx];
+
+			kbd->pending_key.code = code;
+			kbd->pending_key.dl = dl;
+			kbd->pending_key.expire = time + d->args[1].timeout;
+			kbd->pending_key.behaviour = PK_INTERRUPT_ACTION1;
+
+      send_key(kbd, kbd->pending_key.code, 0);
 		}
 
 		break;
